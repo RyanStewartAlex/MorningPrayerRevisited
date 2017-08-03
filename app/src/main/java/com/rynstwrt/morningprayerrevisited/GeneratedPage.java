@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -188,128 +189,81 @@ public class GeneratedPage extends AppCompatActivity{
 
         //psalms
 
-
         List<Object> bodyList = Arrays.asList(doc.select("h2:containsOwn(Morning Psalms) ~ *").toArray());
         bodyList = bodyList.subList(0, bodyList.indexOf(doc.select("h2:containsOwn(Evening Psalms)").first()));
 
         List<List<String>> psalms = new ArrayList<>();
 
-        //get bodylist into string array w/ only usable lines
         List<String> stringList = new ArrayList<>();
         for (Object o : bodyList) {
             Element e = (Element) o;
             Node ns = e.nextSibling();
-            if (ns != null && !(ns.toString().trim().isEmpty()) && !ns.toString().contains("<sup>")) {
-                String s = ns.toString().trim();
+
+            if (e.toString().matches("<p><strong>Psalm \\d+</strong> <em>.+</em></p>")) {
+                String s = e.toString().trim();
                 s = s.replaceAll("&nbsp;", "");
                 s = s.replaceAll("</?\\w+>", "");
 
                 stringList.add(s);
+            } else if (ns != null && !ns.toString().contains("<sup>")) {
+                String s = ns.toString().trim();
+                s = s.replaceAll("&nbsp;", "");
+                s = s.replaceAll("</?\\w+>", "");
+
+                if (!(ns.toString().trim().isEmpty())) {
+                    stringList.add(s);
+                }
+
             }
         }
 
-        //split string array into each psalm
         int start = 0;
         int end = 0;
 
         for (String s : stringList) {
-            System.out.println(s);
-            if (s.matches("Psalm \\d+.+") || s.matches("Evening Psalms")) {
+            if (!s.trim().isEmpty() && (s.matches("Psalm \\d+.+") || s.matches("Evening Psalms"))) {
                 start = end;
                 end = stringList.indexOf(s);
-                psalms.add(stringList.subList(start, end));
+
+                List<String> section = stringList.subList(start, end);
+                if (!section.isEmpty()) {
+                    psalms.add(section);
+                }
             }
+        }
+
+        List<String> psalmTitles = new ArrayList<>();
+
+        for (List<String> sl : psalms) {
+            String title = sl.get(0);
+            psalmTitles.add(title);
         }
 
         for (List<String> ls : psalms) {
+            genBig(psalmTitles.get(psalms.indexOf(ls)));
+            br();br();
             for (String s : ls) {
-                //System.out.println(s);
+                if (!psalmTitles.contains(s)) {
+                    System.out.println(s);
+                    gen(s);
+                    br();
+                    if (!s.contains("*")) {
+                        br();
+                    }
+                }
+            }
+            if (psalms.indexOf(ls) != (psalms.size() - 1)) {
+                br();
             }
         }
 
-
-
-
-        /*
-        doc.select("p > em").remove();
-        doc.select("sup").remove();
-
-        String psalmBody = doc.body().toString();
-        String psalmArea = psalmBody.substring(psalmBody.indexOf("<h2>Morning Psalms</h2>"), psalmBody.indexOf("<h2>Evening Psalms</h2>"));
-
-        //replace nbsp and br
-        psalmArea = psalmArea.replace("&nbsp;", "");
-
-        //split psalms into own section
-        String[] psalms = psalmArea.split("<p></p>");
-
-        //split psalm lines into own section
-        List<List<String>> psalmLines;
-        for (String s : psalms) {
-
-        }
-
-
-        for (String psalm : psalms) {
-            System.out.println(psalm + "and");
-        }
-        */
-
-
-        br();br();
         gen(R.string.endofpsalmsappointed);
 
         br();br();br();
 
 
-         /*
 
-        Element lastItem = doc.select("*:contains(The Morning Psalms) ~ *:contains(The Lessons)").first();
-        List<List<Object>> lessons = new ArrayList<>();
-        List<String> lessonTitles = new ArrayList<>();
-        Elements afterStrongsLesson = doc.select("#Lessons3 ~ h1,#Lessons3 ~ strong,#Lessons3 ~ b");
-
-
-        for (int i = 0; i < afterStrongsLesson.size(); i++) {
-            if (bodyList.indexOf(afterStrongsLesson.get(i)) < bodyList.indexOf(lastItem) && afterStrongsLesson.get(i).text().matches("The \\w+ Testament Lesson|The Gospel")) {
-                List<Object> currentLesson;
-
-                try {
-                    if (bodyList.indexOf(afterStrongsLesson.get(i + 1)) < bodyList.indexOf(lastItem)) {
-                        currentLesson = bodyList.subList(bodyList.indexOf(afterStrongsLesson.get(i)) + 1, bodyList.indexOf(afterStrongsLesson.get(i + 1)));
-                    } else {
-                        currentLesson = bodyList.subList(bodyList.indexOf(afterStrongsLesson.get(i)) + 1, bodyList.indexOf(lastItem));
-                    }
-                }catch(IndexOutOfBoundsException e) {
-                    currentLesson = bodyList.subList(bodyList.indexOf(afterStrongsLesson.get(i)) + 1, bodyList.indexOf(lastItem));
-                }
-                lessons.add(currentLesson);
-            }
-        }
-
-        List<List<Object>> selectedLessons = new ArrayList<>();
-
-        for (List<Object> lo : selectedLessons) {
-            Element firstItem = (Element) lo.get(1);
-            lessonTitles.add(firstItem.text());
-            List<Object> originalLo = lo;
-            lo = lo.subList(2, lo.size());
-
-            genBig(firstItem.text());
-            br();br();
-
-            for (Object o : lo) {
-                Element e = (Element) o;
-                e.text(e.text().replaceAll("\\d+\\s?([A-Za-z]+)", "$1"));
-                gen(e.text());
-                br();br();
-            }
-            pickText(R.array.canticle);
-            //if not last lesson, br() x3.
-            if (selectedLessons.indexOf(originalLo) != selectedLessons.size() - 1) {
-                br();br();br();
-            }
-        }*/
+        //lessons
 
 
         br();br();br();
