@@ -1,6 +1,8 @@
 package com.rynstwrt.morningprayerrevisited;
 
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +20,9 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class GeneratedPage extends AppCompatActivity{
@@ -31,6 +35,7 @@ public class GeneratedPage extends AppCompatActivity{
     boolean isPriest, isJubilate;
     int collectSpinnerChoice;
     Random ran;
+    TextToSpeech tts;
 
     String text = "";
 
@@ -44,15 +49,32 @@ public class GeneratedPage extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()) {
-            case R.id.action_audio: //TODO: takes two presses on initial play?
-                if(item.getTitle() == "Read Aloud") {
+            case R.id.action_audio:
+                if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp).getConstantState())) {
                     item.setTitle("Stop Reading");
                     item.setIcon(R.drawable.ic_pause_black_24dp);
+
                     //play audio
+                    String[] textSections = text.split("</?br\\s?/?>");
+
+                    for(String s : textSections) {
+
+                        s = s.replaceAll("</?\\w+\\s?/?>", "").trim();
+                        s = s.replaceAll("\\*", "");
+                        s = s.replaceAll("Jubilate", "Jubilatey");
+                        s = s.replaceAll("Venite", "Venitey");
+                        s = s.replaceAll("(\\d+)\\s?-\\s?(\\d+)", "$1 through $2");
+                        System.out.println(s);
+
+                        tts.speak(s, TextToSpeech.QUEUE_ADD, null);
+                    }
+
                 } else {
                     item.setTitle("Read Aloud");
                     item.setIcon(R.drawable.ic_play_arrow_black_24dp);
+
                     //pause it
+                    tts.stop();
                 }
                 break;
         }
@@ -75,6 +97,14 @@ public class GeneratedPage extends AppCompatActivity{
         isPriest = getIntent().getBooleanExtra("isPriest", true);
         isJubilate = getIntent().getBooleanExtra("isJubilate", true);
         collectSpinnerChoice = getIntent().getIntExtra("collectSpinner", 0);
+
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR)
+                tts.setLanguage(Locale.UK);
+            }
+        });
 
         genBig(R.string.opensent); //TODO: remove br(); calls.
         br();br();
@@ -104,37 +134,24 @@ public class GeneratedPage extends AppCompatActivity{
         }
 
         br();br();br();
-        if (isPriest) {
+
             genBig(R.string.confofsin);
             br();br();
             genItal(R.string.officiantsays);
             br();br();
-            pickText(R.array.confessionofsin_pt1_priest);
+            pickText(R.array.confessionofsin_pt1);
             br();br();
             genItal(R.string.silence);
             br();br();
             genItal(R.string.togetherkneel);
             br();br();
-            gen(R.string.confessionofsin_pt2_priest);
+            gen(R.string.confessionofsin_pt2);
             br();br();
             genItal(R.string.prieststand);
             br();br();
+        if (isPriest) {
             gen(R.string.confessionofsin_pt3_priest);
         } else {
-            genBig(R.string.confofsin);
-            br();br();
-            genItal(R.string.officiantsays);
-            br();br();
-            pickText(R.array.confessionofsin_pt1_other);
-            br();br();
-            genItal(R.string.silence);
-            br();br();
-            genItal(R.string.togetherkneel);
-            br();br();
-            gen(R.string.confessionofsin_pt2_other);
-            br();br();
-            genItal(R.string.remainkneeling);
-            br();br();
             gen(R.string.confessionofsin_pt3_other);
         }
 
@@ -244,7 +261,6 @@ public class GeneratedPage extends AppCompatActivity{
             br();br();
             for (String s : ls) {
                 if (!psalmTitles.contains(s)) {
-                    System.out.println(s);
                     gen(s);
                     br();
                     if (!s.contains("*")) {
@@ -265,8 +281,30 @@ public class GeneratedPage extends AppCompatActivity{
 
         //lessons
 
+        List<Object> lessonArea = Arrays.asList(doc.select("div#theReadings > p ~ *").toArray());
+        lessonArea = lessonArea.subList(0, lessonArea.indexOf(doc.select("h2:containsOwn(Morning Psalms)").first()));
 
-        br();br();br();
+        List<String> lessonTitles = new ArrayList<>();
+        List<String> lessons = new ArrayList<>();
+        for (Object o : lessonArea) {
+            Element e = (Element) o;
+            lessonTitles.add(e.text());
+            Node ns = e.nextSibling();
+            lessons.add(ns.toString());
+        }
+
+        for (String s : lessons) {
+            genBig(lessonTitles.get(lessons.indexOf(s)));
+            br();br();
+            gen(s);
+            br();br();
+            pickText(R.array.canticle);
+            br();br();br();
+        }
+
+
+
+
         genBig(R.string.creed);
         br();br();
         genItal(R.string.officiantandpeople);

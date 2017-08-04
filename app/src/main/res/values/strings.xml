@@ -1,7 +1,7 @@
 <resources>
 
-    <string name="app_name">Episcopal Morning Prayer</string>
-    <string name="header_text">Rite II Generator</string>
+    <string name="app_name">Resurrection Plano Morning Prayer</string>
+    <string name="header_text">MP Rite II Generator</string>
     <string name="clergy_prompt_text">I AM A:</string>
     <string name="clergy_first">PRIEST</string>
     <string name="clergy_second">OTHER</string>
@@ -27,7 +27,7 @@
     <string name="alleluia">Alleluia</string>
     <string name="opensent">Opening Sentences</string>
     <string name="confofsin">Confession of Sin</string>
-    <string name="invandsalt">The Inventory and Psalter</string>
+    <string name="invandsalt">The Invitatory and Psalter</string>
     <string name="psalmsappointed">The Psalm or Psalms Appointed</string>
     <string name="lesson">The Lessons</string>
     <string name="creed">The Apostles\' Creed</string>
@@ -154,18 +154,13 @@
         <item>Thus says the high and lofty One who inhabits eternity, whose name is Holy, "I dwell in the high and holy place and also with the one who has a contrite and humble spirit, to revive the spirit of the humble and to revive the heart of the contrite."</item>
     </string-array>
 
-    <string-array name="confessionofsin_pt1_priest">
+    <string-array name="confessionofsin_pt1">
         <item>Dearly beloved, we have come together in the presence of Almighty God our heavenly Father, to set forth his praise, to hear his holy Word, and to ask, for ourselves and on behalf of others, those things that are necessary for our life and our salvation. And so that we may prepare ourselves in heart and mind to worship him, let us kneel in silence, and with penitent and obedient hearts confess our sins, that we may obtain forgiveness by his infinite goodness and mercy.</item>
         <item>Let us confess our sins against God and our neighbor.</item>
     </string-array>
-    <string name="confessionofsin_pt2_priest">Most merciful God,&lt;br /&gt; we confess that we have sinned against you&lt;br /&gt; in thought, word, and deed,&lt;br /&gt; by what we have done,&lt;br /&gt; and by what we have left undone.&lt;br /&gt; We have not loved you with our whole heart;&lt;br /&gt; we have not loved our neighbors as ourselves.&lt;br /&gt;We are truly sorry and we humbly repent.&lt;br /&gt;For the sake of your Son Jesus Christ,&lt;br /&gt;have mercy on us and forgive us;&lt;br /&gt;that we may delight in your will,&lt;br /&gt;and walk in your ways,&lt;br /&gt;to the glory of your name. Amen.</string>
+    <string name="confessionofsin_pt2">Most merciful God, we confess that we have sinned against you in thought, word, and deed, by what we have done, and by what we have left undone. We have not loved you with our whole heart; we have not loved our neighbors as ourselves. We are truly sorry and we humbly repent. For the sake of your Son Jesus Christ, have mercy on us and forgive us; that we may delight in your will, and walk in your ways, to the glory of your Name. Amen.</string>
     <string name="confessionofsin_pt3_priest">Almighty God have mercy on you, forgive you all your sins through our Lord Jesus Christ, strengthen you in all goodness, and by the power of the Holy Spirit keep you in eternal life. <i>Amen.</i></string>
-    <string-array name="confessionofsin_pt1_other">
-        <item>Dearly beloved, we have come together in the presence of Almighty God your heavenly Father, to set forth his praise, to hear his holy Word, and to ask, for ourselves and on behalf of others, those things that are necessary for your life and your salvation. And so that we may prepare ourselves in heart and mind to worship him, let you kneel in silence, and with penitent and obedient hearts confess your sins, that we may obtain forgiveness by his infinite goodness and mercy.</item>
-        <item>Let you confess your sins against God and your neighbor.</item>
-    </string-array>
-    <string name="confessionofsin_pt2_other">Most merciful God, we confess that we have sinned against you in thought, word, and deed, by what we have done, and by what we have left undone. We have not loved you with your whole heart; that we may delight in your will, and walk in your ways, to the glory of your Name. Amen.</string>
-    <string name="confessionofsin_pt3_other">Almighty God have mercy on you, forgive you all your sins through your Lord Jesus Christ, strengthen you in all goodness, and by the power of the Holy Spirit keep you in eternal life. <i>Amen.</i></string>
+    <string name="confessionofsin_pt3_other">Almighty God have mercy on us, forgive us all our sins through your Lord Jesus Christ, strengthen us in all goodness, and by the power of the Holy Spirit keep us in eternal life. <i>Amen.</i></string>
 
     <string name="invandsalt_pt1">&lt;i&gt;&lt;small&gt;Officiant:  &lt;/small&gt;&lt;/i&gt;Lord, open our lips.</string>
     <string name="invandsalt_pt2">&lt;i&gt;&lt;small&gt;People:  &lt;/small&gt;&lt;/i&gt;And our mouth shall proclaim your praise.</string>

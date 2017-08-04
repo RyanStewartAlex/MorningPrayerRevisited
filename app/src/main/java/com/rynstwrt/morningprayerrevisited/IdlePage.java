@@ -39,8 +39,7 @@ public class IdlePage extends AppCompatActivity {
         String url;
 
         JsoupAsyncTask() {
-            //url = "http://prayer.forwardmovement.org/the_daily_readings.php?d=" + date.getDayOfMonth() + "&m=" + date.getMonthOfYear() + "&y=" + date.getYear();
-            url = "http://prayer.forwardmovement.org/the_daily_readings.php?d=1&m=8&y=2017";
+            url = "http://prayer.forwardmovement.org/the_daily_readings.php?d=" + date.getDayOfMonth() + "&m=" + date.getMonthOfYear() + "&y=" + date.getYear();
         }
 
         @Override
