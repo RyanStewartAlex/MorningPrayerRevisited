@@ -3,6 +3,7 @@ package com.rynstwrt.morningprayerrevisited;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -52,12 +53,15 @@ public class GeneratedPage extends AppCompatActivity{
             case R.id.action_audio:
                 if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp).getConstantState())) {
                     item.setTitle("Stop Reading");
-                    item.setIcon(R.drawable.ic_pause_black_24dp);
+                    //item.setIcon(R.drawable.ic_pause_black_24dp);
+                    item.setIcon(R.drawable.ic_stop_black_24dp);
 
                     //play audio
                     String[] textSections = text.split("</?br\\s?/?>");
 
-                    for(String s : textSections) {
+                    String[] ts = textSections;
+
+                    for(String s : ts) {
 
                         s = s.replaceAll("</?\\w+\\s?/?>", "").trim();
                         s = s.replaceAll("\\*", "");
@@ -67,6 +71,8 @@ public class GeneratedPage extends AppCompatActivity{
                         System.out.println(s);
 
                         tts.speak(s, TextToSpeech.QUEUE_ADD, null);
+
+
                     }
 
                 } else {
@@ -101,8 +107,25 @@ public class GeneratedPage extends AppCompatActivity{
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if (status != TextToSpeech.ERROR)
-                tts.setLanguage(Locale.UK);
+                if (status != TextToSpeech.ERROR) {
+                    tts.setLanguage(Locale.UK);
+                    tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                        @Override
+                        public void onStart(String utteranceId) {
+
+                        }
+
+                        @Override
+                        public void onDone(String utteranceId) {
+
+                        }
+
+                        @Override
+                        public void onError(String utteranceId) {
+
+                        }
+                    });
+                }
             }
         });
 
@@ -110,27 +133,43 @@ public class GeneratedPage extends AppCompatActivity{
         br();br();
 
         if (cevents.inAdvent()) {
-            pickTextWithVerse(R.array.openingadvent, R.array.openingadvent_chapters);
+            List<String> cl = pickTextWithVerse(R.array.openingadvent, R.array.openingadvent_chapters);
+            gen(cl.get(0));
+            genSmall(cl.get(1));
         } else if (cevents.isChristmas()) {
-            pickTextWithVerse(R.array.openingchristmas, R.array.openingchristmas_chapters);
+            List<String> cl = pickTextWithVerse(R.array.openingchristmas, R.array.openingchristmas_chapters);
+            gen(cl.get(0));
+            genSmall(cl.get(1));
         } else if (cevents.isEpiphany()) {
-            pickTextWithVerse(R.array.openingepiphany, R.array.openingepiphany_chapters);
+            List<String> cl = pickTextWithVerse(R.array.openingepiphany, R.array.openingepiphany_chapters);
+            gen(cl.get(0));
+            genSmall(cl.get(1));
         } else if (cevents.inLent()) {
-            pickTextWithVerse(R.array.openinglent, R.array.openinglent_chapters);
+            List<String> cl = pickTextWithVerse(R.array.openinglent, R.array.openinglent_chapters);
+            gen(cl.get(0));
+            genSmall(cl.get(1));
         } else if (cevents.inHolyWeek()) {
-            pickTextWithVerse(R.array.openingholyweek, R.array.openingholyweek_chapters);
+            List<String> cl = pickTextWithVerse(R.array.openingholyweek, R.array.openingholyweek_chapters);
+            gen(cl.get(0));
+            genSmall(cl.get(1));
         } else if (cevents.inEasterSeasonIncludingAscensionDay()) {
             gen(R.string.openingeasterasc_pt1);
             genItal(R.string.openingeasterasc_pt2);
-            pickTextWithVerse(R.array.openingeasterasc, R.array.openingeasterasc_chapters);
+            List<String> cl = pickTextWithVerse(R.array.openingeasterasc, R.array.openingeasterasc_chapters);
+            gen(cl.get(0));
+            genSmall(cl.get(1));
         } else if (cevents.isTrinitySunday()) {
             gen(R.string.openingtrinity);
             br();
             genItal(R.string.revelation4_8);
         } else if (cevents.isAllSaints()) {
-            pickTextWithVerse(R.array.openingsaint, R.array.openingsaint_chapters);
+            List<String> cl = pickTextWithVerse(R.array.openingsaint, R.array.openingsaint_chapters);
+            gen(cl.get(0));
+            genSmall(cl.get(1));
         } else {
-            pickTextWithVerse(R.array.openinganytime, R.array.openinganytime_chapters);
+            List<String> cl = pickTextWithVerse(R.array.openinganytime, R.array.openinganytime_chapters);
+            gen(cl.get(0));
+            genSmall(cl.get(1));
         }
 
         br();br();br();
@@ -139,7 +178,7 @@ public class GeneratedPage extends AppCompatActivity{
             br();br();
             genItal(R.string.officiantsays);
             br();br();
-            pickText(R.array.confessionofsin_pt1);
+            gen(pickText(R.array.confessionofsin_pt1));
             br();br();
             genItal(R.string.silence);
             br();br();
@@ -198,16 +237,16 @@ public class GeneratedPage extends AppCompatActivity{
                 gen(R.string.antiphon_incarnation);
             }
         } else {
-            pickText(R.array.antiphon_otherdays);
+            gen(pickText(R.array.antiphon_otherdays));
         }
 
         br();br();br();
 
 
         //psalms
-
-        List<Object> bodyList = Arrays.asList(doc.select("h2:containsOwn(Morning Psalms) ~ *").toArray());
-        bodyList = bodyList.subList(0, bodyList.indexOf(doc.select("h2:containsOwn(Evening Psalms)").first()));
+        
+        List<Object> bodyList = Arrays.asList(doc.select("#theDailyPrayers > h3:eq(18) ~ *").toArray());
+        bodyList = bodyList.subList(0, bodyList.indexOf(doc.select("#theDailyPrayers > h2:eq(91)").first()));
 
         List<List<String>> psalms = new ArrayList<>();
 
@@ -216,7 +255,7 @@ public class GeneratedPage extends AppCompatActivity{
             Element e = (Element) o;
             Node ns = e.nextSibling();
 
-            if (e.toString().matches("<p><strong>Psalm \\d+</strong> <em>.+</em></p>")) {
+            if (e.toString().matches(".+Psalm \\d+.+")) {
                 String s = e.toString().trim();
                 s = s.replaceAll("&nbsp;", "");
                 s = s.replaceAll("</?\\w+>", "");
@@ -238,7 +277,7 @@ public class GeneratedPage extends AppCompatActivity{
         int end = 0;
 
         for (String s : stringList) {
-            if (!s.trim().isEmpty() && (s.matches("Psalm \\d+.+") || s.matches("Evening Psalms"))) {
+            if (!s.trim().isEmpty() && (s.matches("Psalm \\d+.+") || s.matches("The Lessons"))) {
                 start = end;
                 end = stringList.indexOf(s);
 
@@ -281,27 +320,77 @@ public class GeneratedPage extends AppCompatActivity{
 
         //lessons
 
-        List<Object> lessonArea = Arrays.asList(doc.select("div#theReadings > p ~ *").toArray());
-        lessonArea = lessonArea.subList(0, lessonArea.indexOf(doc.select("h2:containsOwn(Morning Psalms)").first()));
+        /*
 
-        List<String> lessonTitles = new ArrayList<>();
-        List<String> lessons = new ArrayList<>();
+
+        List<Object> lessonArea = Arrays.asList(doc.select("").toArray());
+        lessonArea = bodyList.subList(0, bodyList.indexOf(doc.select("h2:containsOwn(The Lessons)").first()));
+
+        List<List<String>> lessons = new ArrayList<>();
+
+        List<String> lessonStringList = new ArrayList<>();
+
         for (Object o : lessonArea) {
             Element e = (Element) o;
-            lessonTitles.add(e.text());
             Node ns = e.nextSibling();
-            lessons.add(ns.toString());
+
+            if (e.toString().matches(".+Psalm \\d+.+")) {
+                String s = e.toString().trim();
+                s = s.replaceAll("&nbsp;", "");
+                s = s.replaceAll("</?\\w+>", "");
+
+                lessonStringList.add(s);
+            } else if (ns != null && !ns.toString().contains("<sup>")) {
+                String s = ns.toString().trim();
+                s = s.replaceAll("&nbsp;", "");
+                s = s.replaceAll("</?\\w+>", "");
+
+                if (!(ns.toString().trim().isEmpty())) {
+                    lessonStringList.add(s);
+                }
+
+            }
         }
 
-        for (String s : lessons) {
-            genBig(lessonTitles.get(lessons.indexOf(s)));
-            br();br();
-            gen(s);
-            br();br();
-            pickText(R.array.canticle);
-            br();br();br();
+        int lessonStart = 0;
+        int lessonEnd = 0;
+
+        for (String s : lessonStringList) {
+            if (!s.trim().isEmpty() && (s.matches("Psalm \\d+.+") || s.matches("The Lessons"))) {
+                lessonStart = lessonEnd;
+                lessonEnd = lessonStringList.indexOf(s);
+
+                List<String> section = lessonStringList.subList(start, end);
+                if (!section.isEmpty()) {
+                    lessons.add(section);
+                }
+            }
         }
 
+        List<String> lessonTitles = new ArrayList<>();
+
+        for (List<String> sl : lessons) {
+            String title = sl.get(0);
+            lessonTitles.add(title);
+        }
+
+        for (List<String> ls : lessons) {
+            genBig(lessonTitles.get(lessons.indexOf(ls)));
+            br();br();
+            for (String s : ls) {
+                if (!lessonTitles.contains(s)) {
+                    gen(s);
+                    br();
+                    if (!s.contains("*")) {
+                        br();
+                    }
+                }
+            }
+            if (lessons.indexOf(ls) != (lessons.size() - 1)) {
+                br();
+            }
+        }
+        */
 
 
 
@@ -356,7 +445,7 @@ public class GeneratedPage extends AppCompatActivity{
                 break;
         }
         br();br();
-        pickText(R.array.collect_endings);
+        gen(pickText(R.array.collect_endings));
 
         br();br();br();
         genBig(R.string.thanksgiving);
@@ -383,18 +472,21 @@ public class GeneratedPage extends AppCompatActivity{
         text += "<br/>";
     }
 
-    private void pickTextWithVerse(int anum, int bnum) {
+    private List<String> pickTextWithVerse(int anum, int bnum) {
         String[] a = idToArray(anum);
         String[] b = idToArray(bnum);
         int r = ran.nextInt(a.length);
-        gen(a[r]);
-        genSmall(b[r]);
+
+        List<String> ml = new ArrayList<>();
+        ml.add(a[r]);
+        ml.add(b[r]);
+        return ml;
     }
 
-    private void pickText(int anum) {
+    private String pickText(int anum) {
         String[] a = idToArray(anum);
         int r = ran.nextInt(a.length);
-        gen(a[r]);
+        return a[r];
     }
 
     private void gen(String s) {
