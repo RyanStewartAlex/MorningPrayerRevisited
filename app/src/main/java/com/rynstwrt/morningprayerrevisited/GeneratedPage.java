@@ -68,7 +68,6 @@ public class GeneratedPage extends AppCompatActivity{
                         s = s.replaceAll("Jubilate", "Jubilatey");
                         s = s.replaceAll("Venite", "Venitey");
                         s = s.replaceAll("(\\d+)\\s?-\\s?(\\d+)", "$1 through $2");
-                        System.out.println(s);
 
                         tts.speak(s, TextToSpeech.QUEUE_ADD, null);
 
@@ -244,13 +243,13 @@ public class GeneratedPage extends AppCompatActivity{
 
 
         //psalms
-        
-        List<Object> bodyList = Arrays.asList(doc.select("#theDailyPrayers > h3:eq(18) ~ *").toArray());
-        bodyList = bodyList.subList(0, bodyList.indexOf(doc.select("#theDailyPrayers > h2:eq(91)").first()));
+
+        List<Object> bodyList = Arrays.asList(doc.select("h2:matches(Morning Psalms) ~ *").toArray());
+        bodyList = bodyList.subList(0, bodyList.indexOf(doc.select("h2:matches(Evening Psalms)").first()));
 
         List<List<String>> psalms = new ArrayList<>();
-
         List<String> stringList = new ArrayList<>();
+
         for (Object o : bodyList) {
             Element e = (Element) o;
             Node ns = e.nextSibling();
@@ -277,13 +276,16 @@ public class GeneratedPage extends AppCompatActivity{
         int end = 0;
 
         for (String s : stringList) {
-            if (!s.trim().isEmpty() && (s.matches("Psalm \\d+.+") || s.matches("The Lessons"))) {
+            System.out.println(s);
+            if (!s.trim().isEmpty() && (s.matches("Psalm \\d+.+") || s.matches("Evening Psalms"))) {
+                System.out.println("a");
                 start = end;
                 end = stringList.indexOf(s);
 
                 List<String> section = stringList.subList(start, end);
                 if (!section.isEmpty()) {
                     psalms.add(section);
+                    System.out.println("b");
                 }
             }
         }
