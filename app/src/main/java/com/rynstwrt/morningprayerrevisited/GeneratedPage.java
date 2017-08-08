@@ -241,159 +241,134 @@ public class GeneratedPage extends AppCompatActivity{
 
         br();br();br();
 
+        int rollbackPosition = text.length();
 
-        //psalms
 
-        List<Object> bodyList = Arrays.asList(doc.select("h2:matches(Morning Psalms) ~ *").toArray());
-        bodyList = bodyList.subList(0, bodyList.indexOf(doc.select("h2:matches(Evening Psalms)").first()));
+        try {
 
-        List<List<String>> psalms = new ArrayList<>();
-        List<String> stringList = new ArrayList<>();
+            //psalms
 
-        for (Object o : bodyList) {
-            Element e = (Element) o;
-            Node ns = e.nextSibling();
+            List<Object> bodyList = Arrays.asList(doc.select("h2:matches(Morning Psalms) ~ *").toArray());
+            bodyList = bodyList.subList(0, bodyList.indexOf(doc.select("h2:matches(Evening Psalms)").first()));
 
-            if (e.toString().matches(".+Psalm \\d+.+")) {
-                String s = e.toString().trim();
-                s = s.replaceAll("&nbsp;", "");
-                s = s.replaceAll("</?\\w+>", "");
+            List<List<String>> psalms = new ArrayList<>();
+            List<String> stringList = new ArrayList<>();
 
-                stringList.add(s);
-            } else if (ns != null && !ns.toString().contains("<sup>")) {
-                String s = ns.toString().trim();
-                s = s.replaceAll("&nbsp;", "");
-                s = s.replaceAll("</?\\w+>", "");
+            for (Object o : bodyList) {
+                Element e = (Element) o;
+                Node ns = e.nextSibling();
 
-                if (!(ns.toString().trim().isEmpty())) {
+                if (e.toString().matches(".+Psalm \\d+.+")) {
+                    String s = e.toString().trim();
+                    s = s.replaceAll("&nbsp;", "");
+                    s = s.replaceAll("</?\\w+>", "");
+
                     stringList.add(s);
-                }
+                } else if (ns != null && !ns.toString().contains("<sup>")) {
+                    String s = ns.toString().trim();
+                    s = s.replaceAll("&nbsp;", "");
+                    s = s.replaceAll("</?\\w+>", "");
 
-            }
-        }
+                    if (!(ns.toString().trim().isEmpty())) {
+                        stringList.add(s);
+                    }
 
-        int start = 0;
-        int end = 0;
-
-        for (String s : stringList) {
-            System.out.println(s);
-            if (!s.trim().isEmpty() && (s.matches("Psalm \\d+.+") || s.matches("Evening Psalms"))) {
-                System.out.println("a");
-                start = end;
-                end = stringList.indexOf(s);
-
-                List<String> section = stringList.subList(start, end);
-                if (!section.isEmpty()) {
-                    psalms.add(section);
-                    System.out.println("b");
                 }
             }
-        }
 
-        List<String> psalmTitles = new ArrayList<>();
+            int start = 0;
+            int end = 0;
 
-        for (List<String> sl : psalms) {
-            String title = sl.get(0);
-            psalmTitles.add(title);
-        }
+            for (String s : stringList) {
+                if (!s.trim().isEmpty() && (s.matches("Psalm \\d+.+") || s.matches("Evening Psalms"))) {
+                    start = end;
+                    end = stringList.indexOf(s);
 
-        for (List<String> ls : psalms) {
-            genBig(psalmTitles.get(psalms.indexOf(ls)));
-            br();br();
-            for (String s : ls) {
-                if (!psalmTitles.contains(s)) {
-                    gen(s);
-                    br();
-                    if (!s.contains("*")) {
-                        br();
+                    List<String> section = stringList.subList(start, end);
+                    if (!section.isEmpty()) {
+                        psalms.add(section);
                     }
                 }
             }
-            if (psalms.indexOf(ls) != (psalms.size() - 1)) {
-                br();
+
+            List<String> psalmTitles = new ArrayList<>();
+
+            for (List<String> sl : psalms) {
+                String title = sl.get(0);
+                psalmTitles.add(title);
             }
-        }
 
-        gen(R.string.endofpsalmsappointed);
+            for (List<String> ls : psalms) {
+                genBig(psalmTitles.get(psalms.indexOf(ls)));
+                br();br();
+                for (String s : ls) {
+                    if (!psalmTitles.contains(s)) {
+                        gen(s);
+                        br();
+                        if (!s.contains("*")) {
+                            br();
+                        }
+                    }
+                }
+                if (psalms.indexOf(ls) != (psalms.size() - 1)) {
+                    br();
+                }
+            }
 
-        br();br();br();
+            gen(R.string.endofpsalmsappointed);
 
 
+            //lessons
 
-        //lessons
+            List<Object> lessonArea = Arrays.asList(doc.select("div#theReadings > p:eq(0) ~ *").toArray());
+            lessonArea = lessonArea.subList(0, lessonArea.indexOf(doc.select("h2:matches(Morning Psalms)").first()));
 
-        /*
+            List<String> lessonStringList = new ArrayList<>();
 
+            for (Object o : lessonArea) {
+                Element e = (Element) o;
+                Node ns = e.nextSibling();
 
-        List<Object> lessonArea = Arrays.asList(doc.select("").toArray());
-        lessonArea = bodyList.subList(0, bodyList.indexOf(doc.select("h2:containsOwn(The Lessons)").first()));
+                if (e.text().matches("\\d?\\s?\\w+ \\d+:\\d+-\\d+")) {
+                    String s = e.toString().trim();
+                    s = s.replaceAll("&nbsp;", "");
+                    s = s.replaceAll("</?\\w+>", "");
 
-        List<List<String>> lessons = new ArrayList<>();
-
-        List<String> lessonStringList = new ArrayList<>();
-
-        for (Object o : lessonArea) {
-            Element e = (Element) o;
-            Node ns = e.nextSibling();
-
-            if (e.toString().matches(".+Psalm \\d+.+")) {
-                String s = e.toString().trim();
-                s = s.replaceAll("&nbsp;", "");
-                s = s.replaceAll("</?\\w+>", "");
-
-                lessonStringList.add(s);
-            } else if (ns != null && !ns.toString().contains("<sup>")) {
-                String s = ns.toString().trim();
-                s = s.replaceAll("&nbsp;", "");
-                s = s.replaceAll("</?\\w+>", "");
-
-                if (!(ns.toString().trim().isEmpty())) {
                     lessonStringList.add(s);
-                }
 
-            }
-        }
+                    s = ns.toString().trim();
+                    s = s.replaceAll("&nbsp;", "");
+                    s = s.replaceAll("</?\\w+>", "");
 
-        int lessonStart = 0;
-        int lessonEnd = 0;
-
-        for (String s : lessonStringList) {
-            if (!s.trim().isEmpty() && (s.matches("Psalm \\d+.+") || s.matches("The Lessons"))) {
-                lessonStart = lessonEnd;
-                lessonEnd = lessonStringList.indexOf(s);
-
-                List<String> section = lessonStringList.subList(start, end);
-                if (!section.isEmpty()) {
-                    lessons.add(section);
-                }
-            }
-        }
-
-        List<String> lessonTitles = new ArrayList<>();
-
-        for (List<String> sl : lessons) {
-            String title = sl.get(0);
-            lessonTitles.add(title);
-        }
-
-        for (List<String> ls : lessons) {
-            genBig(lessonTitles.get(lessons.indexOf(ls)));
-            br();br();
-            for (String s : ls) {
-                if (!lessonTitles.contains(s)) {
-                    gen(s);
-                    br();
-                    if (!s.contains("*")) {
-                        br();
+                    if (!s.isEmpty()) {
+                        lessonStringList.add(s);
                     }
+
+
                 }
             }
-            if (lessons.indexOf(ls) != (lessons.size() - 1)) {
-                br();
-            }
-        }
-        */
 
+            for (int i = 0; i < lessonStringList.size(); i++) {
+                String s = lessonStringList.get(i);
+                if (lessonStringList.indexOf(s) % 2 == 0) {
+                    br();br();br();
+                    genBig(s);
+                    br();br();
+                } else {
+                    gen(s);
+                    br();br();br();
+                    List<String> canticleS = pickTextWithVerse(R.array.canticle, R.array.canticle_chapters);
+                    genBig(canticleS.get(1));
+                    br();br();
+                    gen(canticleS.get(0));
+                }
+            }
+
+            br();br();br();
+        } catch (Exception e) {
+            e.printStackTrace();
+            text = text.substring(0, rollbackPosition);
+        }
 
 
         genBig(R.string.creed);
