@@ -68,7 +68,10 @@ public class GeneratedPage extends AppCompatActivity{
                         s = s.replaceAll("Jubilate", "Jubilatey");
                         s = s.replaceAll("Venite", "Venitey");
                         s = s.replaceAll("(\\d+)\\s?-\\s?(\\d+)", "$1 through $2");
+                        s = s.replaceAll("V\\. (.+)", "$1");
+                        s = s.replaceAll("R\\. (.+)", "$1");
 
+                        System.out.println(s);
                         tts.speak(s, TextToSpeech.QUEUE_ADD, null);
 
 
@@ -177,7 +180,7 @@ public class GeneratedPage extends AppCompatActivity{
             br();br();
             genItal(R.string.officiantsays);
             br();br();
-            gen(pickText(R.array.confessionofsin_pt1));
+            gen(R.string.confessionofsin_pt1);
             br();br();
             genItal(R.string.silence);
             br();br();
@@ -356,11 +359,14 @@ public class GeneratedPage extends AppCompatActivity{
                     br();br();
                 } else {
                     gen(s);
-                    br();br();br();
-                    List<String> canticleS = pickTextWithVerse(R.array.canticle, R.array.canticle_chapters);
-                    genBig(canticleS.get(1));
-                    br();br();
-                    gen(canticleS.get(0));
+                    //if not gospel
+                    if (i != (lessonStringList.size() - 1)) {
+                        br();br();br();
+                        List<String> canticleS = pickTextWithVerse(R.array.canticle, R.array.canticle_chapters);
+                        genBig(canticleS.get(1));
+                        br();br();
+                        gen(canticleS.get(0));
+                    }
                 }
             }
 
@@ -394,6 +400,11 @@ public class GeneratedPage extends AppCompatActivity{
             gen(R.string.theprayers_pt4_priest);
         else
             gen(R.string.theprayers_pt4_other);
+
+        br();br();br();
+        genBig(R.string.suffrage_pt1);
+        br();br();
+        gen(pickText(R.array.sufferages));
 
         br();br();br();
         genBig(R.string.collectday);
@@ -432,8 +443,14 @@ public class GeneratedPage extends AppCompatActivity{
         gen(R.string.thanksgiving_pt1);
         br();br();
         gen(R.string.thanksgiving_pt2);
-        br();
-        genItal(R.string.thanksgiving_pt3);
+        br();br();
+        if (cevents.inEasterSeasonIncludingAscensionDay()) {
+            genItal(R.string.thanksgiving_pt3_easterseason);
+        } else {
+            genItal(R.string.thanksgiving_pt3);
+        }
+        br();br();
+        gen(pickText(R.array.thanksgiving_pt4));
 
 
 
