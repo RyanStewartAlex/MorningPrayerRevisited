@@ -53,8 +53,8 @@ public class GeneratedPage extends AppCompatActivity{
             case R.id.action_audio:
                 if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp).getConstantState())) {
                     item.setTitle("Stop Reading");
-                    //item.setIcon(R.drawable.ic_pause_black_24dp);
-                    item.setIcon(R.drawable.ic_stop_black_24dp);
+                    item.setIcon(R.drawable.ic_pause_black_24dp);
+                    //item.setIcon(R.drawable.ic_stop_black_24dp);
 
                     //play audio
                     String[] textSections = text.split("</?br\\s?/?>");
@@ -106,11 +106,14 @@ public class GeneratedPage extends AppCompatActivity{
         isJubilate = getIntent().getBooleanExtra("isJubilate", true);
         collectSpinnerChoice = getIntent().getIntExtra("collectSpinner", 0);
 
+
+
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
                     tts.setLanguage(Locale.UK);
+                    tts.setSpeechRate(0.83f);
                     tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                         @Override
                         public void onStart(String utteranceId) {
