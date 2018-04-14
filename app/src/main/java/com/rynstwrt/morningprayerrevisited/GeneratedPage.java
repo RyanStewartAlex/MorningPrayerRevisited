@@ -63,15 +63,11 @@ public class GeneratedPage extends AppCompatActivity{
 
                     for(String s : ts) {
 
-                        s = s.replaceAll("</?\\w+\\s?/?>", "").trim();
-                        s = s.replaceAll("\\*", "");
-                        s = s.replaceAll("Jubilate", "Jubilatey");
-                        s = s.replaceAll("Venite", "Venitey");
-                        s = s.replaceAll("(\\d+)\\s?-\\s?(\\d+)", "$1 through $2");
-                        s = s.replaceAll("V\\. (.+)", "$1");
-                        s = s.replaceAll("R\\. (.+)", "$1");
+
+                        s = s.replaceAll("<.+>.+</.+>", "\n\n\n\n\n\n\n\n\n\n");
 
                         System.out.println(s);
+
                         tts.speak(s, TextToSpeech.QUEUE_ADD, null);
 
 
